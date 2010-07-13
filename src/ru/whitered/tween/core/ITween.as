@@ -9,7 +9,7 @@ package ru.whitered.tween.core
 	{
 		function start():void;
 		function stop():void;
-		function reset():void;
+		function rewind():void;
 		
 		function get isPlaying():Boolean;
 		

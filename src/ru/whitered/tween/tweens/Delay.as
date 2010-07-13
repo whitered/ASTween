@@ -68,7 +68,7 @@ package ru.whitered.tween.tweens
 
 		
 		
-		public function reset():void
+		public function rewind():void
 		{
 			if(timer)
 			{

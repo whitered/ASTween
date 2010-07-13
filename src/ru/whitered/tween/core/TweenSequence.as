@@ -133,12 +133,12 @@ package ru.whitered.tween.core
 
 		
 		
-		public function reset():void
+		public function rewind():void
 		{
 			for each(var tween:ITween in tweens)
 			{
 				tween.stop();
-				tween.reset();
+				tween.rewind();
 			}
 			
 			if(_isPlaying)

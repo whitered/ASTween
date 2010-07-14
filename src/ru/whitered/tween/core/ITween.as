@@ -7,8 +7,8 @@ package ru.whitered.tween.core
 	 */
 	public interface ITween 
 	{
-		function start():void;
-		function stop():void;
+		function start():Boolean;
+		function stop():Boolean;
 		function rewind():void;
 		
 		function get isPlaying():Boolean;

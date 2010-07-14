@@ -28,13 +28,14 @@ package ru.whitered.tween.core
 		
 		
 		
-		public function add(tween:ITween, beforeTween:ITween = null):void
+		public function add(tween:ITween, beforeTween:ITween = null):Boolean
 		{
+			if(tweens.indexOf(tween) >= 0) return false;
 			
 			if(beforeTween)
 			{
 				const index:int = tweens ? tweens.indexOf(beforeTween) : -1;
-				if(index == -1) return;
+				if(index == -1) return false;
 				tweens.splice(index, 0, tween);
 			}
 			else
@@ -42,14 +43,16 @@ package ru.whitered.tween.core
 				tweens ||= new Vector.<ITween>();
 				tweens.push(tween);
 			}
+			
+			return true;
 		}
 		
 		
 		
-		public function remove(tween:ITween):void
+		public function remove(tween:ITween):Boolean
 		{
 			const index:int = tweens ? tweens.indexOf(tween) : -1;
-			if(index == -1) return;
+			if(index == -1) return false;
 			
 			if(tween == currentTween)
 			{
@@ -71,29 +74,33 @@ package ru.whitered.tween.core
 			}
 			
 			tweens.splice(index, 1);
+			
+			return true;
 		}
 
 		
 		
-		public function start():void
+		public function start():Boolean
 		{
-			if(_isPlaying || !tweens || tweens.length == 0) return;
+			if(_isPlaying || !tweens || tweens.length == 0) return false;
 			
-			_isPlaying = true;
-			startTween(currentTween || tweens[0]);
+			_isPlaying = startTween(currentTween || tweens[0]);
+			return _isPlaying;
 		}
+
 		
 		
-		
-		private function startTween(tween:ITween):void
+		private function startTween(tween:ITween):Boolean
 		{	
 			currentTween = tween;
-			currentTween.start();
-			currentTween.onComplete.add(handleCurrentTweenComplete);
-			
-			if(!currentTween.isPlaying)
+			if(currentTween.start())
 			{
-				startNextTween();
+				currentTween.onComplete.add(handleCurrentTweenComplete);
+				return true;
+			}
+			else
+			{
+				return startNextTween();
 			}
 		}
 
@@ -101,34 +108,38 @@ package ru.whitered.tween.core
 		
 		private function handleCurrentTweenComplete(tween:ITween):void 
 		{
-			startNextTween();
+			tween.onComplete.remove(handleCurrentTweenComplete);
+			if(!startNextTween())
+			{
+				_isPlaying = false;
+				_onComplete.dispatch(this);
+			}
 		}
 
 		
 		
-		private function startNextTween():void 
+		private function startNextTween():Boolean 
 		{
 			const nextIndex:int = tweens.indexOf(currentTween) + 1;
 			if(nextIndex >= tweens.length)
 			{
-				stop();
-				_onComplete.dispatch(this);
+				return false;
 			}
 			else
 			{
-				currentTween.onComplete.remove(handleCurrentTweenComplete);
-				startTween(tweens[nextIndex]);
+				return startTween(tweens[nextIndex]);
 			}
 		}
 
 		
 		
-		public function stop():void
+		public function stop():Boolean
 		{
-			if(!_isPlaying) return;
+			if(!_isPlaying) return false;
 			
 			_isPlaying = false;
 			currentTween.onComplete.remove(handleCurrentTweenComplete);
+			return true;
 		}
 
 		

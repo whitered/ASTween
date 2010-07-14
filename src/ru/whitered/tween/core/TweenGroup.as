@@ -20,7 +20,7 @@ package ru.whitered.tween.core
 		
 		
 		
-		public function add(tween:ITween):void
+		public function add(tween:ITween):Boolean
 		{
 			if(!tweens)
 			{
@@ -28,7 +28,7 @@ package ru.whitered.tween.core
 			}
 			else if(tweens.indexOf(tween) >= 0)
 			{
-				return;
+				return false;
 			}
 			
 			
@@ -38,28 +38,32 @@ package ru.whitered.tween.core
 			{
 				startTween(tween);
 			}
+			
+			return true;
 		}
 		
 		
 		
-		public function remove(tween:ITween):void
+		public function remove(tween:ITween):Boolean
 		{
 			const index:int = tweens ? tweens.indexOf(tween) : -1;
-			if(index == -1) return;
+			if(index == -1) return false;
 			
 			tweens.splice(index, 1);
 			
-			if(_isPlaying)
+			if(_isPlaying && playingTweens[tween])
 			{
 				handleTweenComplete(tween);
 			}
+			
+			return true;
 		}
 		
 		
 		
-		public function start():void
+		public function start():Boolean
 		{
-			if(_isPlaying) return;
+			if(_isPlaying) return false;
 			
 			playingTweens = new Dictionary();
 			
@@ -68,15 +72,20 @@ package ru.whitered.tween.core
 				startTween(tween);
 			}
 			
-			checkCompletion();
+			for each(var key:* in playingTweens)
+			{
+				return true;
+				key;
+			}
+			
+			return false;
 		}
 		
 		
 		
 		private function startTween(tween:ITween):void
 		{
-			tween.start();
-			if(tween.isPlaying)
+			if(tween.start())
 			{
 				playingTweens[tween] = true;
 				tween.onComplete.add(handleTweenComplete);
@@ -85,9 +94,9 @@ package ru.whitered.tween.core
 
 		
 		
-		public function stop():void
+		public function stop():Boolean
 		{
-			if(!_isPlaying) return;
+			if(!_isPlaying) return false;
 			
 			playingTweens = null;
 			
@@ -96,6 +105,8 @@ package ru.whitered.tween.core
 				tween.stop();
 				tween.onComplete.remove(handleTweenComplete);
 			}
+			
+			return true;
 		}
 		
 		

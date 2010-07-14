@@ -146,8 +146,11 @@ package ru.whitered.tween.core
 		
 		public function rewind():void
 		{
-			for each(var tween:ITween in tweens)
+			var tween:ITween;
+			
+			for (var i:int = tweens.length - 1; i >= 0; i--)
 			{
+				tween = tweens[i];
 				tween.stop();
 				tween.rewind();
 			}

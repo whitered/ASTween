@@ -26,7 +26,7 @@ package ru.whitered.tween.pulse
 		
 		private function handleTimer(event:TimerEvent):void 
 		{
-			signaller.dispatch(getTimer());
+			signaller.dispatch(currentTime);
 		}
 
 		
@@ -35,6 +35,13 @@ package ru.whitered.tween.pulse
 		public function get signal():ISignal
 		{
 			return signaller.signal;
+		}
+		
+		
+		
+		public function get currentTime():uint
+		{
+			return getTimer();
 		}
 	}
 }

@@ -35,5 +35,12 @@ package ru.whitered.tween.pulse
 		{
 			return signaller.signal;
 		}
+		
+		
+		
+		public function get currentTime():uint
+		{
+			return getTimer();
+		}
 	}
 }

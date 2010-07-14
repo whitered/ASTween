@@ -8,5 +8,6 @@ package ru.whitered.tween.pulse
 	public interface IPulse 
 	{
 		function get signal():ISignal;
+		function get currentTime():uint;
 	}
 }

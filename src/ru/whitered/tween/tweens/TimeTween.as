@@ -74,23 +74,27 @@ package ru.whitered.tween.tweens
 		
 		
 		
-		public function start():void
+		public function start():Boolean
 		{
-			if(_isPlaying || position >= duration) return;
+			if(_isPlaying || position >= duration) return false;
 			
 			_isPlaying = true;
 			lastSyncronization = _pulse.currentTime;
 			_pulse.signal.add(handlePulse);
+			
+			return true;
 		}
 		
 		
 		
-		public function stop():void
+		public function stop():Boolean
 		{
-			if(!_isPlaying) return;
+			if(!_isPlaying) return false;
 			
 			_isPlaying = false;
 			_pulse.signal.remove(handlePulse);
+			
+			return true;
 		}
 		
 		

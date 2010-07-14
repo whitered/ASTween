@@ -30,9 +30,9 @@ package ru.whitered.tween.tweens
 
 		
 		
-		public function start():void
+		public function start():Boolean
 		{
-			if(_isPlaying) return;
+			if(_isPlaying) return false;
 			
 			_isPlaying = true;
 			
@@ -42,17 +42,20 @@ package ru.whitered.tween.tweens
 				timer.addEventListener(TimerEvent.TIMER_COMPLETE, handleTimerComplete);
 			}
 			timer.start();
+			
+			return true;
 		}
 		
 		
 		
-		public function stop():void
+		public function stop():Boolean
 		{
-			if(!_isPlaying) return;
+			if(!_isPlaying) return false;
 			
 			_isPlaying = false;
 			
 			timer.stop();
+			return true;
 		}
 
 		

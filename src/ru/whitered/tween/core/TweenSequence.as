@@ -18,7 +18,7 @@ package ru.whitered.tween.core
 
 		
 		
-		public function TweenSequence(tweens:Vector.<ITween>) 
+		public function TweenSequence(tweens:Vector.<ITween> = null) 
 		{
 			for each(var tween:ITween in tweens)
 			{
@@ -30,7 +30,7 @@ package ru.whitered.tween.core
 		
 		public function add(tween:ITween, beforeTween:ITween = null):Boolean
 		{
-			if(tweens.indexOf(tween) >= 0) return false;
+			if(tweens && tweens.indexOf(tween) >= 0) return false;
 			
 			if(beforeTween)
 			{

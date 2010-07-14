@@ -1,5 +1,6 @@
 package ru.whitered.tween.tweens 
 {
+	import ru.whitered.signaller.Signal;
 	import ru.whitered.signaller.Signaller;
 	import ru.whitered.signaller.ISignal;
 	import ru.whitered.tween.core.ITween;
@@ -12,6 +13,10 @@ package ru.whitered.tween.tweens
 	public class TimeTween implements ITween  
 	{
 		private static var _defaultPulse:IPulse = PulseGenerator.enterFrame;
+		
+		
+		private const _onUpdate:Signaller = new Signaller();
+		public const onUpdate:Signal = _onUpdate.signal;
 
 		
 		
@@ -79,7 +84,7 @@ package ru.whitered.tween.tweens
 			if(_isPlaying || position >= duration) return false;
 			
 			_isPlaying = true;
-			lastSyncronization = _pulse.currentTime;
+			update(position, _pulse.currentTime);
 			_pulse.signal.add(handlePulse);
 			
 			return true;
@@ -148,6 +153,8 @@ package ru.whitered.tween.tweens
 		{
 			this.position = position; 
 			this.lastSyncronization = lastSynchronization;
+			
+			_onUpdate.dispatch(this);
 			
 			if(_isPlaying && position >= duration)
 			{

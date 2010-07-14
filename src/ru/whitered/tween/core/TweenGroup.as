@@ -17,6 +17,17 @@ package ru.whitered.tween.core
 		private var playingTweens:Dictionary;
 		
 		private var _isPlaying:Boolean = false;
+
+		
+		
+		public function TweenGroup(tweens:Vector.<ITween> = null) 
+		{
+			for each(var tween:ITween in tweens)
+			{
+				add(tween);
+			}
+		}
+
 		
 		
 		

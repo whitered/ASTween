@@ -16,16 +16,19 @@ package ru.whitered.tween.tweens
 		
 		
 		
-		private var duration:Number;
+		private var duration:uint;
 		private var timer:Timer;
 		
 		private var _isPlaying:Boolean = false;
 		
 		
 		
-		public function Delay(duration:Number) 
+		/**
+		 * @param duration in milliseconds
+		 */
+		public function Delay(duration:uint) 
 		{
-			this.duration = duration || 0;
+			this.duration = duration;
 		}
 
 		
@@ -34,7 +37,6 @@ package ru.whitered.tween.tweens
 		{
 			if(_isPlaying) return false;
 			
-			_isPlaying = true;
 			
 			if(!timer)
 			{
@@ -43,6 +45,7 @@ package ru.whitered.tween.tweens
 			}
 			timer.start();
 			
+			_isPlaying = true;
 			return true;
 		}
 		

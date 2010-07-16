@@ -60,7 +60,8 @@ package ru.whitered.tween.core
 			const index:int = tweens ? tweens.indexOf(tween) : -1;
 			if(index == -1) return false;
 			
-			tweens.splice(index, 1);
+			const lastElem:ITween = tweens.pop();
+			if(lastElem != tween) tweens[index] = lastElem;
 			
 			if(_isPlaying && playingTweens[tween])
 			{

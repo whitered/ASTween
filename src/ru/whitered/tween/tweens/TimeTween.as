@@ -42,16 +42,21 @@ package ru.whitered.tween.tweens
 
 		private var duration:uint;
 		private var lastSyncronization:uint = 0;
-		private var position:uint = 0;
+		private var offset:uint = 0;
+		
+		private var positionFrom:Number;
+		private var positionTo:Number;
 
 		
 		
 		/**
 		 * @param duration in milliseconds
 		 */
-		public function TimeTween(duration:uint) 
+		public function TimeTween(duration:uint, positionFrom:Number = 0, positionTo:Number = 1) 
 		{
 			this.duration = duration;
+			this.positionFrom = positionFrom;
+			this.positionTo = positionTo;
 		}
 		
 		
@@ -81,10 +86,10 @@ package ru.whitered.tween.tweens
 		
 		public function start():Boolean
 		{
-			if(_isPlaying || position >= duration) return false;
+			if(_isPlaying || offset >= duration) return false;
 			
 			_isPlaying = true;
-			update(position, _pulse.currentTime);
+			update(offset, _pulse.currentTime);
 			_pulse.signal.add(handlePulse);
 			
 			return true;
@@ -113,7 +118,7 @@ package ru.whitered.tween.tweens
 		
 		private function handlePulse(timer:int):void
 		{
-			update(position + timer - lastSyncronization, timer);
+			update(offset + timer - lastSyncronization, timer);
 		}
 
 		
@@ -132,31 +137,30 @@ package ru.whitered.tween.tweens
 		
 		
 		
-		public function get progress():Number
+		public function get position():Number
 		{
-			return position / duration;
+			return positionFrom + (positionTo - positionFrom) * offset / duration;
 		}
 		
 		
 		
-		public function set progress(value:Number):void
+		public function set position(value:Number):void
 		{
-			if(isNaN(value) || value < 0) value = 0;
-			else if(value > 1) value = 1;
-			
-			update(value * duration, _pulse.currentTime);
+			if(isNaN(value)) value = positionFrom;
+			const progress:Number = (value - positionFrom) / (positionTo - positionFrom);
+			update(progress * duration, _pulse.currentTime);
 		}
 		
 		
 		
-		private function update(position:uint, lastSynchronization:uint):void
+		private function update(offset:uint, lastSynchronization:uint):void
 		{
-			this.position = position; 
+			this.offset = offset; 
 			this.lastSyncronization = lastSynchronization;
 			
 			_onUpdate.dispatch(this);
 			
-			if(_isPlaying && position >= duration)
+			if(_isPlaying && offset >= duration)
 			{
 				stop();
 				_onComplete.dispatch(this);

@@ -4,16 +4,19 @@ package ru.whitered.tween.displayObject
 	/**
 	 * @author whitered
 	 */
-	public class PropertyModifier 
+	public class PropertyModifier implements IPropertyModifier 
 	{
 		private var object:Object;
 		private var propertyName:String;
 		
 		private var _startValue:Number = 0;
-		private var _endValue:Number = 1;
+		private var _endValue:Number = 0;
 		
-		
+		private var relative:Boolean = true;
+		private var value:Number = 0;
 
+		
+		
 		
 		
 		public function PropertyModifier(object:Object, propertyName:String) 
@@ -24,30 +27,11 @@ package ru.whitered.tween.displayObject
 		
 		
 		
-		public function get startValue():Number
+		public function setChange(value:Number, relative:Boolean):PropertyModifier
 		{
-			return _startValue;
-		}
-		
-		
-		
-		public function set startValue(startValue:Number):void
-		{
-			_startValue = startValue;
-		}
-		
-		
-		
-		public function get endValue():Number
-		{
-			return _endValue;
-		}
-		
-		
-		
-		public function set endValue(endValue:Number):void
-		{
-			_endValue = endValue;
+			this.relative = relative;
+			this.value = value;
+			return this;
 		}
 		
 		
@@ -62,6 +46,7 @@ package ru.whitered.tween.displayObject
 		public function init():void
 		{
 			_startValue = object[propertyName];
+			_endValue = relative ? _startValue + value : value;
 		}
 	}
 }

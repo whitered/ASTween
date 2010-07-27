@@ -27,7 +27,7 @@ package ru.whitered.tween.displayObject
 		
 		override public function start():Boolean 
 		{
-			for each(var modifier:PropertyModifier in modifiers) modifier.init();
+			for each(var modifier:IPropertyModifier in modifiers) modifier.init();
 			return super.start();
 		}
 		
@@ -36,7 +36,7 @@ package ru.whitered.tween.displayObject
 		private function handleUpdate(tween:DisplayObjectTween):void 
 		{
 			const progress:Number = this.position;
-			for each(var modifier:PropertyModifier in modifiers)
+			for each(var modifier:IPropertyModifier in modifiers)
 			{
 				modifier.update(progress);
 			}
@@ -44,18 +44,30 @@ package ru.whitered.tween.displayObject
 		
 		
 		
-		private function createModifier(propertyName:String):PropertyModifier
+		private function createModifier(propertyName:String, value:Number, relative:Boolean):IPropertyModifier
 		{
-			const modifier:PropertyModifier = modifiers[propertyName] ||= new PropertyModifier(displayObject, propertyName); 
+			const modifier:PropertyModifier = modifiers[propertyName] ||= new PropertyModifier(displayObject, propertyName);
+			modifier.setChange(value, relative); 
 			if(isPlaying) modifier.init();
 			return modifier;
 		}
 
 		
 		
+		//----------------------------------------------------------------------
+		// basic properties
+		//----------------------------------------------------------------------
 		public function xTo(value:Number):DisplayObjectTween
 		{
-			createModifier("x").endValue = value;
+			createModifier("x", value, false);
+			return this;
+		}
+		
+		
+		
+		public function xBy(value:Number):DisplayObjectTween
+		{
+			createModifier("x", value, true);
 			return this;
 		}
 
@@ -63,15 +75,15 @@ package ru.whitered.tween.displayObject
 		
 		public function yTo(value:Number):DisplayObjectTween
 		{
-			createModifier("y").endValue = value;
+			createModifier("y", value, false);
 			return this;
 		}
-
 		
 		
-		public function alphaTo(value:Number):DisplayObjectTween
+		
+		public function yBy(value:Number):DisplayObjectTween
 		{
-			createModifier("alpha").endValue = value;
+			createModifier("y", value, true);
 			return this;
 		}
 		
@@ -79,8 +91,33 @@ package ru.whitered.tween.displayObject
 		
 		public function moveTo(x:Number, y:Number):DisplayObjectTween
 		{
-			createModifier("x").endValue = x;
-			createModifier("y").endValue = y;
+			createModifier("x", x, false);
+			createModifier("y", y, false);
+			return this;
+		}
+		
+		
+		
+		public function moveBy(x:Number, y:Number):DisplayObjectTween
+		{
+			createModifier("x", x, true);
+			createModifier("y", y, true);
+			return this;
+		}
+
+		
+		
+		public function alphaTo(value:Number):DisplayObjectTween
+		{
+			createModifier("alpha", value, false);
+			return this;
+		}
+		
+		
+		
+		public function alphaBy(value:Number):DisplayObjectTween
+		{
+			createModifier("alpha", value, true);
 			return this;
 		}
 	}

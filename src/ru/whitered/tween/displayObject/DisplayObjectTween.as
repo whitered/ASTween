@@ -21,7 +21,7 @@ package ru.whitered.tween.displayObject
 		{
 			this.displayObject = displayObject;
 			this.easing = easing;
-			super(duration, 0, 1);
+			super(duration);
 			onUpdate.add(handleUpdate);
 		}
 		

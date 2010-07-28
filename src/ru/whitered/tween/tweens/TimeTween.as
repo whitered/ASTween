@@ -44,19 +44,25 @@ package ru.whitered.tween.tweens
 		private var lastSyncronization:uint = 0;
 		private var offset:uint = 0;
 		
-		private var positionFrom:Number;
-		private var positionTo:Number;
+		private var positionFrom:Number = 0;
+		private var positionTo:Number = 1;
 
 		
 		
 		/**
 		 * @param duration in milliseconds
 		 */
-		public function TimeTween(duration:uint, positionFrom:Number = 0, positionTo:Number = 1) 
+		public function TimeTween(duration:uint) 
 		{
 			this.duration = duration;
-			this.positionFrom = positionFrom;
-			this.positionTo = positionTo;
+		}
+		
+		
+		
+		public function setInterval(begin:Number, end:Number):void
+		{
+			this.positionFrom = begin;
+			this.positionTo = end;
 		}
 		
 		

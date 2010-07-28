@@ -13,16 +13,18 @@ package ru.whitered.tween.displayObject
 		private var displayObject:DisplayObject;
 		
 		private const modifiers:Dictionary = new Dictionary();
+		private var easing:Function = null;
+
 		
 		
-		
-		public function DisplayObjectTween(displayObject:DisplayObject, duration:uint)
+		public function DisplayObjectTween(displayObject:DisplayObject, duration:uint, easing:Function = null)
 		{
 			this.displayObject = displayObject;
+			this.easing = easing;
 			super(duration, 0, 1);
 			onUpdate.add(handleUpdate);
 		}
-
+		
 		
 		
 		override public function start():Boolean 
@@ -35,7 +37,7 @@ package ru.whitered.tween.displayObject
 		
 		private function handleUpdate(tween:DisplayObjectTween):void 
 		{
-			const progress:Number = this.position;
+			const progress:Number = (easing != null) ? easing(this.position, 0, 1, 1) : this.position;
 			for each(var modifier:IPropertyModifier in modifiers)
 			{
 				modifier.update(progress);
